@@ -1,0 +1,29 @@
+from __future__ import annotations
+from typing import override
+from enum import Enum
+
+class TextType(Enum):
+    PLAIN = "plain"
+    ITALIC = "italic"
+    BOLD = "bold"
+    CODE = "code"
+    LINK = "link"
+    IMAGE = "image"
+
+class TextNode():
+    def __init__(self, text: str, text_type: TextType, url: str | None = None) -> None:
+        self.text: str = text
+        self.text_type: TextType = text_type
+        self.url: str | None = url
+
+    @override
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, TextNode):
+            return NotImplemented
+        if (
+            self.text == other.text
+            and self.text_type == other.text_type
+            and self.url == other.url
+        ):
+            return True
+        return False
