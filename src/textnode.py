@@ -2,6 +2,8 @@ from __future__ import annotations
 from typing import override
 from enum import Enum
 
+from htmlnode import LeafNode
+
 class TextType(Enum):
     PLAIN = "plain"
     ITALIC = "italic"
@@ -29,3 +31,18 @@ class TextNode():
     @override
     def __repr__(self) -> str:
         return f"TextNode({self.text}, {self.text_type.value}, {self.url})"
+
+def text_node_to_html_node(text_node: TextNode) -> LeafNode:
+    match text_node.text_type:
+        case TextType.PLAIN:
+            return LeafNode(None, text_node.text)
+        case TextType.ITALIC:
+            return LeafNode("i", text_node.text)
+        case TextType.BOLD:
+            return LeafNode("b", text_node.text)
+        case TextType.CODE:
+            return LeafNode("code", text_node.text)
+        case TextType.LINK:
+            return LeafNode("a", text_node.text, {"href": f"{text_node.url}"})
+        case TextType.IMAGE:
+            return LeafNode("img", "", {"src": f"{text_node.url}", "alt": f"{text_node.text}"})
