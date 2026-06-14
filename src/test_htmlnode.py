@@ -67,5 +67,42 @@ class TestParentNode(unittest.TestCase):
             "<div><span><b>grandchild</b></span></div>",
         )
 
+    def test_to_html_with_great_grandchildren(self):
+        great_grandchild_node = LeafNode("p", "great-grandchild")
+        grandchild_node = ParentNode("span", [great_grandchild_node])
+        child_node = ParentNode("div", [grandchild_node])
+        parent_node = ParentNode("main", [child_node])
+        self.assertEqual(
+                parent_node.to_html(),
+                "<main><div><span><p>great-grandchild</p></span></div></main>"
+                )
+
+    def test_to_html_with_multi_childs(self):
+        child1 = LeafNode("p", "child1")
+        child2 = LeafNode("a", "child2")
+        child3 = LeafNode("b", "child3")
+        child4 = LeafNode("body", "child4")
+        children = [child1, child2, child3, child4]
+        parent = ParentNode("main", children)
+        self.assertEqual(
+                parent.to_html(),
+                "<main><p>child1</p><a>child2</a><b>child3</b><body>child4</body></main>"
+                )
+
+    def test_parent_node_none_value(self):
+        invalid_child = LeafNode("b", None)
+        valid_child = LeafNode("b", "this is a test node")
+        parent = ParentNode("p", [invalid_child])
+        childless_parent = ParentNode("b", None)
+        tagless_parent = ParentNode(None, [valid_child])
+        self.assertEqual(parent.value, None)
+        with self.assertRaises(ValueError):
+            _ = parent.to_html()
+        with self.assertRaises(ValueError):
+            _ = childless_parent.to_html()
+        with self.assertRaises(ValueError):
+            _ = tagless_parent.to_html()
+        
+
 if __name__ == "__main__":
     unittest.main()
