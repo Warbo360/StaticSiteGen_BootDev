@@ -9,6 +9,13 @@ def split_nodes_delimiter(old_nodes: list[TextNode], delimiter: str, text_type: 
 
         temp: list[TextNode] = []
 
+        # Only difference between solution and mine was instead of checking for delimiter in the old_node
+        # theirs just goes straight to splitting them at the delimiter and if presumably there are none,
+        # they never get split and thus just get added to new_nodes just as is, not sure if it makes a huge difference
+        # besdies readability possibly, since they enter as plain text they all get checked regardless so nothing gets
+        # missed really and the initial check can get around all the other check and go straigh to else... something to
+        # think about still I suppose
+
         if delimiter in old_node.text:
             split_old_node = old_node.text.split(delimiter)
             if len(split_old_node) % 2 == 0:
