@@ -90,5 +90,33 @@ class TextSplitNodesDelimiter(unittest.TestCase):
         with self.assertRaises(ValueError):
             _ = split_nodes_delimiter([old_node], "**", TextType.BOLD)
 
+    def test_beginging_end_delimiter(self):
+        start_node = TextNode("**This** is a node that starts with a delimiter", TextType.PLAIN)
+        end_node = TextNode("This is an end **node**", TextType.PLAIN)
+        self.assertEqual(
+            split_nodes_delimiter([start_node], "**", TextType.BOLD),
+            [
+                TextNode("This", TextType.BOLD),
+                TextNode(" is a node that starts with a delimiter", TextType.PLAIN)
+            ]
+        )
+        self.assertEqual(
+            split_nodes_delimiter([end_node], "**", TextType.BOLD),
+            [
+                TextNode("This is an end ", TextType.PLAIN),
+                TextNode("node", TextType.BOLD),
+            ]
+        )
+        self.assertEqual(
+            split_nodes_delimiter([start_node, end_node], "**", TextType.BOLD),
+            [
+                TextNode("This", TextType.BOLD),
+                TextNode(" is a node that starts with a delimiter", TextType.PLAIN),
+                TextNode("This is an end ", TextType.PLAIN),
+                TextNode("node", TextType.BOLD),
+            ]
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
