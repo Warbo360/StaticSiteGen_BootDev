@@ -104,9 +104,31 @@ Not quote text here
     def test_multiple_types(self):
         text1 = """# This is a heading for markdown"""
         text2 = """```
-This is a code block"""
+This is a code block
+```"""
         text3 = """> This is a quote block
 > I sure hope it returns a block quote"""
+        text4 = """- This is an unorder list
+- Unordered list preferably"""
+        text5 = """1. This is an ordered list
+2. This is the 2nd item in the ordered list
+3. This is the 3rd item in the ordered list"""
+        text6 = """# This is going to combine all of them and this should be a paragraph
+```Python
+This is totally real code
+```
+> NOw a quote block
+> Now a quote block
+- Now an unordered list
+- More unordered list
+1. Now an ordered list
+2. The 2nd part"""
+        self.assertEqual(block_to_block_type(text1), BlockType.HEADING)
+        self.assertEqual(block_to_block_type(text2), BlockType.CODE)
+        self.assertEqual(block_to_block_type(text3), BlockType.QUOTE)
+        self.assertEqual(block_to_block_type(text4), BlockType.UNORDERED_LIST)
+        self.assertEqual(block_to_block_type(text5), BlockType.ORDERED_LIST)
+        self.assertEqual(block_to_block_type(text6), BlockType.PARAGRAPH)
 
 if __name__ == "__main__":
     unittest.main()
