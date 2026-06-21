@@ -1,8 +1,16 @@
 from __future__ import annotations
 from typing import override
 from enum import Enum
-
 from htmlnode import LeafNode
+import re
+
+class BlockType(Enum):
+    PARAGRAPH = "paragraph"
+    HEADING = "heading"
+    CODE = "code"
+    QUOTE = "quote"
+    UNORDERED_LIST = "unordered_list"
+    ORDERED_LIST = "ordered_list"
 
 class TextType(Enum):
     PLAIN = "plain"
@@ -46,3 +54,13 @@ def text_node_to_html_node(text_node: TextNode) -> LeafNode:
             return LeafNode("a", text_node.text, {"href": f"{text_node.url}"})
         case TextType.IMAGE:
             return LeafNode("img", "", {"src": f"{text_node.url}", "alt": f"{text_node.text}"})
+
+def block_to_block_type(markdown: str) -> BlockType:
+    if re.fullmatch(r"^#{1,6} .*", markdown):
+        return BlockType.HEADING
+    elif re.fullmatch(r"```(\w*)\n[\s\S]*?```", markdown):
+        return BlockType.CODE
+    elif re.fullmatch(r"(?:> ?[^\n]*(?:\n|$))+", markdown):
+        return BlockType.QUOTE
+    else:
+        return BlockType.PARAGRAPH
