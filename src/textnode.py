@@ -62,5 +62,7 @@ def block_to_block_type(markdown: str) -> BlockType:
         return BlockType.CODE
     elif re.fullmatch(r"(?:> ?[^\n]*(?:\n|$))+", markdown):
         return BlockType.QUOTE
+    elif re.fullmatch(r"(?:- [^\n]*(:?\n|$))+", markdown):
+        return BlockType.UNORDERED_LIST
     else:
         return BlockType.PARAGRAPH

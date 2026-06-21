@@ -61,5 +61,16 @@ Not quote text here
         self.assertEqual(block_to_block_type(text3), BlockType.PARAGRAPH)
         self.assertEqual(block_to_block_type(text4), BlockType.QUOTE)
 
+    def test_unordered_list(self):
+        text1 = """- An unorder list
+- An unordered list
+- An unordered list"""
+        text2 = """-I forgot the space to start this list!
+- Unordered list
+- Unordered list
+- Unordered list"""
+        self.assertEqual(block_to_block_type(text1), BlockType.UNORDERED_LIST)
+        self.assertEqual(block_to_block_type(text2), BlockType.PARAGRAPH)
+
 if __name__ == "__main__":
     unittest.main()
