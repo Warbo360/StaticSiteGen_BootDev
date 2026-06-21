@@ -72,5 +72,41 @@ Not quote text here
         self.assertEqual(block_to_block_type(text1), BlockType.UNORDERED_LIST)
         self.assertEqual(block_to_block_type(text2), BlockType.PARAGRAPH)
 
+    def test_ordered_lists(self):
+        text1 = """1. An ordered list here
+2. An ordered list here
+3. An ordered list here"""
+        text2 = """1. An order list here
+- Not an ordered list, this return false
+3. This does not matter since the one before breaks the rules"""
+        text3 = """10. An out of order list at the first element
+2. This should return false
+3. Should still return false"""
+        text4 = """1. Testing string
+3. Out of order string should return false
+4. Should return false
+"""
+        text5 = """1. Just a single element ordered list with no line break"""
+        text6 = 21
+        text7 = """1 I forgot the period to make this a list
+2. So this should return false
+3. I'm really sure"""
+                
+        self.assertEqual(block_to_block_type(text1), BlockType.ORDERED_LIST)
+        self.assertEqual(block_to_block_type(text2), BlockType.PARAGRAPH)
+        self.assertEqual(block_to_block_type(text3), BlockType.PARAGRAPH)
+        self.assertEqual(block_to_block_type(text4), BlockType.PARAGRAPH)
+        self.assertEqual(block_to_block_type(text5), BlockType.ORDERED_LIST)
+        with self.assertRaises(TypeError):
+            _ = block_to_block_type(text6)
+        self.assertEqual(block_to_block_type(text7), BlockType.PARAGRAPH)
+
+    def test_multiple_types(self):
+        text1 = """# This is a heading for markdown"""
+        text2 = """```
+This is a code block"""
+        text3 = """> This is a quote block
+> I sure hope it returns a block quote"""
+
 if __name__ == "__main__":
     unittest.main()

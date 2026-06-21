@@ -64,5 +64,21 @@ def block_to_block_type(markdown: str) -> BlockType:
         return BlockType.QUOTE
     elif re.fullmatch(r"(?:- [^\n]*(:?\n|$))+", markdown):
         return BlockType.UNORDERED_LIST
+    elif ordered_list_checker(markdown):
+        return BlockType.ORDERED_LIST
     else:
         return BlockType.PARAGRAPH
+
+def ordered_list_checker(markdown: str) -> bool:
+    if markdown[0] == "1" and markdown[1] == "." and markdown[2] == " ":
+        current: int = 1
+        for i in range(len(markdown)):
+            if markdown[i] == "\n" and markdown[i + 1].isdigit() and markdown[i + 2] == ".":
+                if int(markdown[i + 1]) == current + 1:
+                    current += 1
+                    continue
+            elif markdown[i] != "\n":
+                continue
+            return False
+        return True
+    return False
