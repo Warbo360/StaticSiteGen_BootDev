@@ -2,15 +2,6 @@ from __future__ import annotations
 from typing import override
 from enum import Enum
 from htmlnode import LeafNode
-import re
-
-class BlockType(Enum):
-    PARAGRAPH = "paragraph"
-    HEADING = "heading"
-    CODE = "code"
-    QUOTE = "quote"
-    UNORDERED_LIST = "unordered_list"
-    ORDERED_LIST = "ordered_list"
 
 class TextType(Enum):
     PLAIN = "plain"
@@ -54,31 +45,5 @@ def text_node_to_html_node(text_node: TextNode) -> LeafNode:
             return LeafNode("a", text_node.text, {"href": f"{text_node.url}"})
         case TextType.IMAGE:
             return LeafNode("img", "", {"src": f"{text_node.url}", "alt": f"{text_node.text}"})
-
-def block_to_block_type(markdown: str) -> BlockType:
-    if re.fullmatch(r"^#{1,6} .*", markdown):
-        return BlockType.HEADING
-    elif re.fullmatch(r"```(\w*)\n[\s\S]*?```", markdown):
-        return BlockType.CODE
-    elif re.fullmatch(r"(?:> ?[^\n]*(?:\n|$))+", markdown):
-        return BlockType.QUOTE
-    elif re.fullmatch(r"(?:- [^\n]*(:?\n|$))+", markdown):
-        return BlockType.UNORDERED_LIST
-    elif ordered_list_checker(markdown):
-        return BlockType.ORDERED_LIST
-    else:
-        return BlockType.PARAGRAPH
-
-def ordered_list_checker(markdown: str) -> bool:
-    if markdown[0] == "1" and markdown[1] == "." and markdown[2] == " ":
-        current: int = 1
-        for i in range(len(markdown)):
-            if markdown[i] == "\n" and markdown[i + 1].isdigit() and markdown[i + 2] == ".":
-                if int(markdown[i + 1]) == current + 1:
-                    current += 1
-                    continue
-            elif markdown[i] != "\n":
-                continue
-            return False
-        return True
-    return False
+        case _:
+            raise ValueError(f"Invalid text type: {text_node.text_type}")

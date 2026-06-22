@@ -1,6 +1,6 @@
 import unittest
-from text_to_textnodes import text_to_textnodes
 from textnode import TextNode, TextType
+from extract_markdown import text_to_textnodes
 
 class TestTextToTextNodes(unittest.TestCase):
     def test_all_pattern_match(self):
