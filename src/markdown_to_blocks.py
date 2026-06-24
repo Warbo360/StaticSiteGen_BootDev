@@ -10,15 +10,17 @@ class BlockType(Enum):
     ORDERED_LIST = "ordered_list"
 
 def markdown_to_blocks(markdown: str) -> list[str]:
-    split_markdown = markdown.split("\n\n")
-    for i in range(len(split_markdown)):
-        if split_markdown[i] == "\n":
-            split_markdown.remove(split_markdown[i])
-        split_markdown[i] = split_markdown[i].strip()
-    return split_markdown
+    split_markdown: list[str] = markdown.split("\n\n")
+    filtered_blocks: list[str] = []
+    for block in split_markdown:
+        if block == "":
+            continue
+        block = block.strip()
+        filtered_blocks.append(block)
+    return filtered_blocks
 
 def block_to_block_type(markdown: str) -> BlockType:
-    if re.fullmatch(r"^#{1,6} .*", markdown):
+    if re.fullmatch(r"^#{1,6} [\s\S]*?", markdown):
         return BlockType.HEADING
     if re.fullmatch(r"```(\w*)\n[\s\S]*?```", markdown):
         return BlockType.CODE
@@ -32,6 +34,8 @@ def block_to_block_type(markdown: str) -> BlockType:
         return BlockType.PARAGRAPH
 
 def ordered_list_checker(markdown: str) -> bool:
+    if len(markdown) == 0:
+        return False
     if markdown[0] == "1" and markdown[1] == "." and markdown[2] == " ":
         current: int = 1
         for i in range(len(markdown)):

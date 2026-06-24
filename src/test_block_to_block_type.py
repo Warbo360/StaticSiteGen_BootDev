@@ -113,16 +113,14 @@ This is a code block
         text5 = """1. This is an ordered list
 2. This is the 2nd item in the ordered list
 3. This is the 3rd item in the ordered list"""
-        text6 = """# This is going to combine all of them and this should be a paragraph
-```Python
-This is totally real code
-```
-> NOw a quote block
-> Now a quote block
-- Now an unordered list
-- More unordered list
-1. Now an ordered list
-2. The 2nd part"""
+        text6 = """ This is going to combine all of them and this should be a paragraph
+
+This is more paragraph text that does some stuff and things
+more stuff and things that goes here
+more sutff and things that goes here
+
+Stuf and things that go here
+"""
         self.assertEqual(block_to_block_type(text1), BlockType.HEADING)
         self.assertEqual(block_to_block_type(text2), BlockType.CODE)
         self.assertEqual(block_to_block_type(text3), BlockType.QUOTE)

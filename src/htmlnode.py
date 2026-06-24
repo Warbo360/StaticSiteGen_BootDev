@@ -39,7 +39,7 @@ class LeafNode(HTMLNode):
             raise ValueError("All leaf nodes must have a value")
         if self.tag is None:
             return f"{self.value}"
-        return f"<{self.tag}>{self.value}</{self.tag}>"
+        return f"<{self.tag}{self.props_to_html()}>{self.value}</{self.tag}>"
 
     @override
     def __repr__(self) -> str:
