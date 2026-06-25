@@ -1,7 +1,8 @@
 from textnode import *
+from static_to_public import static_to_public
 
 def main():
-    test_node = TextNode("This is some anchor text", TextType.LINK, "http://www.boot.dev")
-    print(test_node)
+
+    static_to_public("static", "public")
 
 main()
