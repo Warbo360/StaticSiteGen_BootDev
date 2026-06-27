@@ -8,13 +8,13 @@ YELLOW = "\033[33m"
 BLUE = "\033[34m"
 RESET = "\033[0m"
 
-def generate_pages_recursive(dir_path_content: str, template_path: str, dest_dir_path: str) -> None:
+def generate_pages_recursive(dir_path_content: str, template_path: str, dest_dir_path: str, basepath: str = "/") -> None:
     current_dir: list[str] = os.listdir(dir_path_content)
     for i in range(len(current_dir)):
-        print(f"INFO: Parsing \"./{dir_path_content}\"...")
+        print(f"{YELLOW}INFO{RESET}: Parsing \"./{dir_path_content}\"...")
         if os.path.isfile(dir_path_content + "/" + current_dir[i]):
             # If file, generate a new html file for it and place it in the current dest dir
-            print(f"INFO: Generating HTML for \"./{dir_path_content}/{current_dir[i]}\"")
+            print(f"{YELLOW}INFO{RESET}: Generating HTML for \"./{dir_path_content}/{current_dir[i]}\"")
             with open(dir_path_content + "/" + current_dir[i], "r") as f:
                 file_content: str = f.read()
                 title: str = extract_title(file_content)
@@ -22,6 +22,9 @@ def generate_pages_recursive(dir_path_content: str, template_path: str, dest_dir
             with open(template_path, "r") as f:
                 template: str = f.read()
             filled_template: str = template.replace("{{ Title }}", title).replace("{{ Content }}", file_content_to_html)
+            if basepath != "/":
+              filled_template = filled_template.replace("href=\"/", f"href=\"{basepath}")
+              filled_template = filled_template.replace("src=\"/", f"src=\"{basepath}")
             file_name: str = current_dir[i].replace(".md", ".html")
             with open(dest_dir_path + "/" + file_name, "w") as f:
                 _: int = f.write(filled_template)
@@ -29,10 +32,11 @@ def generate_pages_recursive(dir_path_content: str, template_path: str, dest_dir
             continue
         # If not a file, must be a dir, create that same dir in dest, and recursive call going into that sub dir with a
         # target of dest_dir + sub_dir
-        print(f"INFO: Making directory \"{current_dir[i]}\" in \"./{dest_dir_path}\"")
+        print(f"{YELLOW}INFO{RESET}: Making directory \"{current_dir[i]}\" in \"./{dest_dir_path}\"")
         os.mkdir(dest_dir_path + "/" + current_dir[i])
         generate_pages_recursive(
             dir_path_content + "/" + current_dir[i],
             template_path,
-            dest_dir_path + "/" + current_dir[i]
+            dest_dir_path + "/" + current_dir[i],
+            basepath
         )
