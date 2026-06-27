@@ -13,4 +13,6 @@ def generate_page(from_path: str, template_path: str, dest_path: str) -> None:
     template_file_content: str = template_file_content.replace("{{ Title }}", title).replace("{{ Content }}", html_string)
     path_name: str = os.path.dirname(dest_path)
     os.makedirs(path_name, exist_ok=True)
+    with open(dest_path, "w") as f:
+        _ = f.write(template_file_content)
     pass
