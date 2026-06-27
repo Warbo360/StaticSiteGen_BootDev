@@ -15,4 +15,3 @@ def generate_page(from_path: str, template_path: str, dest_path: str) -> None:
     os.makedirs(path_name, exist_ok=True)
     with open(dest_path, "w") as f:
         _ = f.write(template_file_content)
-    pass
